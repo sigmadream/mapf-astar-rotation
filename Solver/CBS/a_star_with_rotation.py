@@ -1,11 +1,5 @@
-# TODO: 회전이 적용된 A* 알고리즘으로 번형
-
 import heapq
-
-
-def move(loc, dir):
-    directions = [(0, -1), (1, 0), (0, 1), (-1, 0), (0, 0)]
-    return loc[0] + directions[dir][0], loc[1] + directions[dir][1]
+from heapq import heappush
 
 
 def get_sum_of_cost(paths):
@@ -16,7 +10,6 @@ def get_sum_of_cost(paths):
 
 
 def compute_heuristics(my_map, goal):
-    # Use Dijkstra to build a shortest-path tree rooted at the goal location
     open_list = []
     closed_list = dict()
     root = {'loc': goal, 'cost': 0}
@@ -37,13 +30,10 @@ def compute_heuristics(my_map, goal):
                 existing_node = closed_list[child_loc]
                 if existing_node['cost'] > child_cost:
                     closed_list[child_loc] = child
-                    # open_list.delete((existing_node['cost'], existing_node['loc'], existing_node))
                     heapq.heappush(open_list, (child_cost, child_loc, child))
             else:
                 closed_list[child_loc] = child
                 heapq.heappush(open_list, (child_cost, child_loc, child))
-
-    # build the heuristics table
     h_values = dict()
     for loc, node in closed_list.items():
         h_values[loc] = node['cost']
@@ -151,10 +141,6 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
         constraints - constraints defining where robot should or cannot go at each timestep
     """
 
-    ##############################
-    # Task 1.1: Extend the A* search to search in the space-time domain
-    #           rather than space domain, only.
-
     open_list = []
     closed_list = dict()
     earliest_goal_timestep = 0
@@ -165,10 +151,6 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     closed_list[(root['loc'], root['timestep'])] = root
     while len(open_list) > 0:
         curr = pop_node(open_list)
-        # if curr['loc'] == goal_loc:
-        #     return get_path(curr)
-        #############################
-        # Task 1.4: Adjust the goal test condition to handle goal constraints
         if curr['loc'] == goal_loc:
             no_future_goalConstraint = True
             for timestep in table:
@@ -233,3 +215,82 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
                 closed_list[(child['loc'], child['timestep'])] = child
                 push_node(open_list, child)
     return None  # Failed to find solutions
+
+
+def astar_rotation(array, start, goal):
+    def check_direction(num1, num2):
+        if num1 >= 0 and num2 >= 0:
+            return [0, 1]
+        elif num1 >= 0 and num2 < 0:
+            return [1, 2]
+        elif num1 < 0 and num2 < 0:
+            return [2, 3]
+        elif num1 < 0 and num2 >= 0:
+            return [3, 0]
+
+    def heuristic(a, b):
+        value = (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2
+        start_direction = a[2]  # 0:up, 1:right, 2:down, 3:left
+        start_vector = {0: [-1, 0], 1: [0, 1], 2: [1, 0], 3: [0, -1]}
+        goal_direction = check_direction(int(b[0] > a[0]), int(b[1] > a[1]))
+        inner_product = start_vector[start_direction][0] * goal_direction[0] + start_vector[start_direction][1] * \
+                        goal_direction[1]
+        if inner_product > 0:
+            return value
+        else:
+            return value + 1
+
+    neighbors = [(0, 0, 0),
+                 (0, 0, 1),
+                 (0, 0, 2),
+                 (0, 0, 3),
+                 (0, 1, 1),
+                 (0, -1, 3),
+                 (1, 0, 2),
+                 (-1, 0, 0)]
+
+    close_set = set()
+    came_from = {}
+    gscore = {start: 0}
+    fscore = {start: heuristic(start, goal)}
+    oheap = []
+
+    heappush(oheap, (fscore[start], start))
+
+    while oheap:
+
+        current = heappop(oheap)[1]
+
+        if current == goal:
+            data = []
+            while current in came_from:
+                data.append(current)
+                current = came_from[current]
+            return data
+
+        close_set.add(current)
+        for i, j, k in neighbors:
+            if abs(current[2] - k) == 2 or abs(current[2] - k) + abs(i) == 2 or abs(current[2] - k) + abs(j) == 2:
+                continue
+            else:
+                neighbor = current[0] + i, current[1] + j, k
+            tentative_g_score = gscore[current] + heuristic(current, neighbor)
+            if 0 <= neighbor[0] < array.shape[0]:
+                if 0 <= neighbor[1] < array.shape[1]:
+                    if array[neighbor[0]][neighbor[1]] == 1:
+                        continue
+                else:
+                    continue
+            else:
+                continue
+
+            if neighbor in close_set and tentative_g_score >= gscore.get(neighbor, 0):
+                continue
+
+            if tentative_g_score < gscore.get(neighbor, 0) or neighbor not in [i[1] for i in oheap]:
+                came_from[neighbor] = current
+                gscore[neighbor] = tentative_g_score
+                fscore[neighbor] = tentative_g_score + heuristic(neighbor, goal)
+                heappush(oheap, (fscore[neighbor], neighbor))
+
+    return False

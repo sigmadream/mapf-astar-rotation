@@ -189,7 +189,7 @@ class CBSSolver(object):
         self.num_of_expanded += 1
         return node
 
-    def find_solution(self, disjoint=True):
+    def find_solution(self):
         """ Finds paths for all agents from their start locations to their goal locations
 
         disjoint    - use disjoint splitting or not
@@ -240,8 +240,8 @@ class CBSSolver(object):
                 self.print_results(p)
                 return p['paths']
             collision = p['collisions'].pop(0)
-            # constraints = standard_splitting(collision)
-            constraints = disjoint_splitting(collision)
+            constraints = standard_splitting(collision)
+            # constraints = disjoint_splitting(collision)
             for constraint in constraints:
                 q = {'cost': 0,
                      'constraints': [constraint],
