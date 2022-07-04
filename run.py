@@ -78,22 +78,19 @@ if __name__ == '__main__':
     result_file = open("results.csv", "w", buffering=1)
 
     for file in sorted(glob.glob(args.instance)):
-        print("***Import an instance***")
+        # print("***Import an instance***")
         my_map, starts, goals = import_mapf_instance(file)
-        print(my_map)
-        print(starts)
-        print(goals)
-        print_mapf_instance(my_map, starts, goals)
+        # print_mapf_instance(my_map, starts, goals)
 
         print("***Run CBS***")
         cbs = CBSSolver(my_map, starts, goals)
         paths = cbs.find_solution()
 
-        cost = get_sum_of_cost(paths)
-        result_file.write("{},{}\n".format(file, cost))
-        # if not args.batch:
-        #     print("***Test paths on a simulation***")
-        #     animation = Animation(my_map, starts, goals, paths)
-        #     # animation.save("output.mp4", 1.0)
-        #     animation.show()
+        # cost = get_sum_of_cost(paths)
+        # result_file.write("{},{}\n".format(file, cost))
+
+        # print("***Test paths on a simulation***")
+        # animation = Animation(my_map, starts, goals, paths)
+        # # animation.save("output.mp4", 1.0)
+        # animation.show()
     result_file.close()
