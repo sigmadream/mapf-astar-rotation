@@ -205,11 +205,10 @@ if __name__ == '__main__':
     constraints = []
     paths = []
 
-    for goal in goals:
-        heuristics.append(compute_heuristics(my_map, goal))
+    [heuristics.append(compute_heuristics(my_map, goal)) for goal in goals]
 
-    for i in range(len(starts)):
-        path = a_star(my_map, starts[i], goals[i], heuristics[i], i, constraints)
+    for agent in range(len(starts)):
+        path = a_star(my_map, starts[agent], goals[agent], heuristics[agent], agent, constraints)
         if path is None:
             raise Exception('No solutions')
         paths.append(path)
