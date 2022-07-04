@@ -1,7 +1,8 @@
-import time as timer
 import heapq
 import random
-from .a_star import compute_heuristics, a_star, get_location, get_sum_of_cost
+import time as timer
+
+from .a_star import compute_heuristics, get_location, get_sum_of_cost, a_star
 
 
 def detect_collision(path1, path2):
@@ -189,12 +190,11 @@ class CBSSolver(object):
         self.num_of_expanded += 1
         return node
 
-    def find_solution(self):
+    def find_solution(self, disjoint=True):
         """ Finds paths for all agents from their start locations to their goal locations
 
         disjoint    - use disjoint splitting or not
         """
-
         self.start_time = timer.time()
 
         # Generate the root node
@@ -222,8 +222,7 @@ class CBSSolver(object):
 
         # Task 3.2: Testing
         for collision in root['collisions']:
-            # print(standard_splitting(collision))
-            print(disjoint_splitting(collision), '\n\n')
+            print(standard_splitting(collision))
 
         ##############################
         # Task 3.3: High-Level Search
@@ -235,13 +234,18 @@ class CBSSolver(object):
         #           Ensure to create a copy of any objects that your child nodes might inherit
 
         while len(self.open_list) > 0:
+            # if self.num_of_generated > 20:
+            #     print('reached maximum number of nodes. Returning...')
+            #     return None
             p = self.pop_node()
             if p['collisions'] == []:
                 self.print_results(p)
+                for pa in p['paths']:
+                    print(pa)
                 return p['paths']
             collision = p['collisions'].pop(0)
-            constraints = standard_splitting(collision)
-            # constraints = disjoint_splitting(collision)
+            # constraints = standard_splitting(collision)
+            constraints = disjoint_splitting(collision)
             for constraint in constraints:
                 q = {'cost': 0,
                      'constraints': [constraint],
@@ -255,8 +259,11 @@ class CBSSolver(object):
                     q['paths'].append(pa)
 
                 ai = constraint['agent']
+                # path = ma_star(self.my_map,self.starts, self.goals,self.heuristics,[ai],q['constraints'])
+                # print(path)
                 path = a_star(self.my_map, self.starts[ai], self.goals[ai], self.heuristics[ai], ai, q['constraints'])
-
+                # if len(path) == 1:
+                #     path = path[0]
                 if path is not None:
                     q['paths'][ai] = path
                     # task 4
@@ -266,6 +273,9 @@ class CBSSolver(object):
                         for v in vol:
                             path_v = a_star(self.my_map, self.starts[v], self.goals[v], self.heuristics[v], v,
                                             q['constraints'])
+                            # path_v = ma_star(self.my_map,self.starts, self.goals,self.heuristics,[],q['constraints'])
+                            if len(path_v) == 1:
+                                path_v = path_v[0]
                             if path_v is None:
                                 continue_flag = True
                             else:
@@ -276,8 +286,6 @@ class CBSSolver(object):
                     q['cost'] = get_sum_of_cost(q['paths'])
                     self.push_node(q)
         return None
-        self.print_results(root)
-        return root['paths']
 
     def print_results(self, node):
         print("\n Found a solution! \n")

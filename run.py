@@ -1,8 +1,8 @@
 import argparse
 import glob
 from pathlib import Path
+
 from Solver.CBS import CBSSolver, get_sum_of_cost
-from Solver.visualize import Animation
 
 SOLVER = "CBS"
 
@@ -78,9 +78,11 @@ if __name__ == '__main__':
     result_file = open("results.csv", "w", buffering=1)
 
     for file in sorted(glob.glob(args.instance)):
-
         print("***Import an instance***")
         my_map, starts, goals = import_mapf_instance(file)
+        print(my_map)
+        print(starts)
+        print(goals)
         print_mapf_instance(my_map, starts, goals)
 
         print("***Run CBS***")
@@ -89,10 +91,9 @@ if __name__ == '__main__':
 
         cost = get_sum_of_cost(paths)
         result_file.write("{},{}\n".format(file, cost))
-
-        if not args.batch:
-            print("***Test paths on a simulation***")
-            animation = Animation(my_map, starts, goals, paths)
-            # animation.save("output.mp4", 1.0)
-            animation.show()
+        # if not args.batch:
+        #     print("***Test paths on a simulation***")
+        #     animation = Animation(my_map, starts, goals, paths)
+        #     # animation.save("output.mp4", 1.0)
+        #     animation.show()
     result_file.close()
