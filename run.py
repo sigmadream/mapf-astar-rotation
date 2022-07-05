@@ -2,7 +2,7 @@ import argparse
 import glob
 from pathlib import Path
 
-from Solver.CBS import CBSSolver, get_sum_of_cost
+from Solver.CBSR import CBSRSolver
 
 SOLVER = "CBS"
 
@@ -82,9 +82,14 @@ if __name__ == '__main__':
         my_map, starts, goals = import_mapf_instance(file)
         # print_mapf_instance(my_map, starts, goals)
 
+        starts = [start + (1,) for start in starts]
+        goals = [goal + (1,) for goal in goals]
+
         print("***Run CBS***")
-        cbs = CBSSolver(my_map, starts, goals)
-        paths = cbs.find_solution()
+        # cbs = CBSSolver(my_map, starts, goals)
+        cbsr = CBSRSolver(my_map, starts, goals)
+        # paths = cbs.find_solution()
+        paths = cbsr.find_solution()
 
         # cost = get_sum_of_cost(paths)
         # result_file.write("{},{}\n".format(file, cost))
@@ -93,4 +98,5 @@ if __name__ == '__main__':
         # animation = Animation(my_map, starts, goals, paths)
         # # animation.save("output.mp4", 1.0)
         # animation.show()
+    print(paths)
     result_file.close()
