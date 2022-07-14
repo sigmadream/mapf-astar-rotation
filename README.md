@@ -23,8 +23,8 @@ $ python run.py
 - `CBS`(conflict based search)
     - [Boyarski, Eli, et al. "ICBS: Improved conflict-based search algorithm for multi-agent pathfinding." Twenty-Fourth International Joint Conference on Artificial Intelligence. 2015.](https://www.aaai.org/ocs/index.php/IJCAI/IJCAI15/paper/download/10955/10766)
 
-- MAPF Benchmark Sets
-    - [Multi-Agent Path-Finding (MAPF) Benchmarks](https://movingai.com/benchmarks/mapf.html)
+- `CBS Tutorial`
+  - [Multi-Agent Pathfinding: Models, Solvers, and Systems](http://ktiml.mff.cuni.cz/~bartak/AAAI2019/slides.pdf)
 
 ## License
 
