@@ -1,5 +1,7 @@
 # CBS base on A* with Rotation
 
+> This code depends on [Model AI Assignments 2020: A Project on Multi-Agent Path Finding (MAPF) - Wolfgang Hönig, Jiaoyang Li, Sven Koenig — University of Southern California](http://modelai.gettysburg.edu/2020/mapf/)
+
 ## Requirements
 
 - Python === `3.10.x`
@@ -26,6 +28,9 @@ $ python run.py
 - `CBS Tutorial`
   - [Multi-Agent Pathfinding: Models, Solvers, and Systems](http://ktiml.mff.cuni.cz/~bartak/AAAI2019/slides.pdf)
 
+  - [Model AI Assignments 2020: A Project on Multi-Agent Path Finding (MAPF) - Wolfgang Hönig, Jiaoyang Li, Sven Koenig — University of Southern California](http://modelai.gettysburg.edu/2020/mapf/)
+
+Wolfgang Hönig, Jiaoyang Li, Sven Koenig — University of Southern California
 ## License
 
 - MIT
