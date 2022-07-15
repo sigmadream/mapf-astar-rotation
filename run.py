@@ -2,7 +2,7 @@ import argparse
 import glob
 from pathlib import Path
 
-from Solver.CBSR import CBSRSolver
+from Solver import CBSSolver, CBSRSolver
 
 SOLVER = "CBS"
 
@@ -80,15 +80,16 @@ if __name__ == '__main__':
     for file in sorted(glob.glob(args.instance)):
         # print("***Import an instance***")
         my_map, starts, goals = import_mapf_instance(file)
-        # print_mapf_instance(my_map, starts, goals)
+        print_mapf_instance(my_map, starts, goals)
 
         starts = [start + (1,) for start in starts]
         goals = [goal + (1,) for goal in goals]
 
         print("***Run CBS***")
         # cbs = CBSSolver(my_map, starts, goals)
-        cbsr = CBSRSolver(my_map, starts, goals)
         # paths = cbs.find_solution()
+
+        cbsr = CBSRSolver(my_map, starts, goals)
         paths = cbsr.find_solution()
 
         # cost = get_sum_of_cost(paths)

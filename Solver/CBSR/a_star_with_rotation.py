@@ -1,10 +1,12 @@
 from heapq import heappop, heappush
 
+
 def get_sum_of_cost(paths):
     rst = 0
     for path in paths:
         rst += len(path) - 1
     return rst
+
 
 def get_location(path, time):
     if time < 0:
@@ -13,6 +15,7 @@ def get_location(path, time):
         return path[time]
     else:
         return path[-1]
+
 
 def check_direction(num1, num2):
     if num1 >= 0 and num2 >= 0:
