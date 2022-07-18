@@ -1,5 +1,7 @@
 # CBS base on A* with Rotation
 
+> This code depends on [Model AI Assignments 2020: A Project on Multi-Agent Path Finding (MAPF) - Wolfgang Hönig, Jiaoyang Li, Sven Koenig — University of Southern California](http://modelai.gettysburg.edu/2020/mapf/)
+
 ## Requirements
 
 - Python === `3.10.x`
@@ -10,7 +12,7 @@
 ```shell
 // We recommend that you build a virtual environment.
 $ pip install -r requirements.txt
-$ python run.py
+$ python run.py --instance 
 ```
 
 ## Ref
@@ -23,9 +25,11 @@ $ python run.py
 - `CBS`(conflict based search)
     - [Boyarski, Eli, et al. "ICBS: Improved conflict-based search algorithm for multi-agent pathfinding." Twenty-Fourth International Joint Conference on Artificial Intelligence. 2015.](https://www.aaai.org/ocs/index.php/IJCAI/IJCAI15/paper/download/10955/10766)
 
-- MAPF Benchmark Sets
-    - [Multi-Agent Path-Finding (MAPF) Benchmarks](https://movingai.com/benchmarks/mapf.html)
+- `CBS Tutorial`
+  - [Multi-Agent Pathfinding: Models, Solvers, and Systems](http://ktiml.mff.cuni.cz/~bartak/AAAI2019/slides.pdf)
 
+  - [Model AI Assignments 2020: A Project on Multi-Agent Path Finding (MAPF) - Wolfgang Hönig, Jiaoyang Li, Sven Koenig — University of Southern California](http://modelai.gettysburg.edu/2020/mapf/)
+    
 ## License
 
 - MIT

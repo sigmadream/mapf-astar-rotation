@@ -1,8 +1,7 @@
 import argparse
-import glob
 from pathlib import Path
+
 from Solver.CBS import CBSSolver, get_sum_of_cost
-from Solver.visualize import Animation
 
 SOLVER = "CBS"
 
@@ -36,12 +35,10 @@ def import_mapf_instance(filename):
     if not f.is_file():
         raise BaseException(filename + " does not exist.")
     f = open(filename, 'r')
-    # first line: #rows #columns
     line = f.readline()
     rows, columns = [int(x) for x in line.split(' ')]
     rows = int(rows)
     columns = int(columns)
-    # #rows lines with the map
     my_map = []
     for r in range(rows):
         line = f.readline()
@@ -51,10 +48,8 @@ def import_mapf_instance(filename):
                 my_map[-1].append(True)
             elif cell == '.':
                 my_map[-1].append(False)
-    # #agents
     line = f.readline()
     num_agents = int(line)
-    # #agents lines with the start/goal positions
     starts = []
     goals = []
     for a in range(num_agents):
@@ -68,31 +63,19 @@ def import_mapf_instance(filename):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Runs various MAPF algorithms')
-    parser.add_argument('--instance', type=str, default=None,
-                        help='The name of the instance file(s)')
-    parser.add_argument('--batch', action='store_true', default=False,
-                        help='Use batch output instead of animation')
+    parser.add_argument('--instance', type=str, default=None, help='The name of the instance file(s)')
 
     args = parser.parse_args()
+    instance = args.instance
 
-    result_file = open("results.csv", "w", buffering=1)
+    print("***Import an instance***")
+    my_map, starts, goals = import_mapf_instance(instance)
+    print_mapf_instance(my_map, starts, goals)
 
-    for file in sorted(glob.glob(args.instance)):
+    print("***Run CBS***")
+    cbs = CBSSolver(my_map, starts, goals)
+    paths = cbs.find_solution()
+    print(f"Paths : {paths}")
 
-        print("***Import an instance***")
-        my_map, starts, goals = import_mapf_instance(file)
-        print_mapf_instance(my_map, starts, goals)
-
-        print("***Run CBS***")
-        cbs = CBSSolver(my_map, starts, goals)
-        paths = cbs.find_solution()
-
-        cost = get_sum_of_cost(paths)
-        result_file.write("{},{}\n".format(file, cost))
-
-        if not args.batch:
-            print("***Test paths on a simulation***")
-            animation = Animation(my_map, starts, goals, paths)
-            # animation.save("output.mp4", 1.0)
-            animation.show()
-    result_file.close()
+    cost = get_sum_of_cost(paths)
+    print(f"Cost : {cost}")
